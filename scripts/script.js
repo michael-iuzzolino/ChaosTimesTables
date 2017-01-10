@@ -16,6 +16,7 @@ var TIMES_TABLE = 7;
 var SLEEP_CONSTANT = 500;
 
 
+var NODE_NUMBERS = true;
 
 var BACKGROUND_COLOR = [255, 242, 242];
 var COLOR_MUTATION_MAG = 50;
@@ -58,10 +59,55 @@ function initializeImage()
 }
 
 
+
+function numberNodes(x, y, n)
+{
+  MainContainer.append("text")
+          .attr("x", function() { 
+
+            var theta_x = Math.acos((x - CIRCLE_CENTER_H)/ CIRCLE_R);
+            var theta_y = Math.asin((y - CIRCLE_CENTER_K)/ CIRCLE_R);
+            var sign = theta_x / theta_y;
+
+            var new_R = CIRCLE_R + 30;
+            if (sign >= 0)
+            {
+              var new_x = new_R * Math.cos(theta_x) + CIRCLE_CENTER_H;  
+            }
+            else
+            {
+              var new_x = new_R * Math.cos(theta_x) + CIRCLE_CENTER_H;
+            }
+
+            return new_x;
+          })
+          .attr("y", function() { 
+            var theta_x = Math.acos((x - CIRCLE_CENTER_H)/ CIRCLE_R);
+            var theta_y = Math.asin((y - CIRCLE_CENTER_K)/ CIRCLE_R);
+            var sign = theta_x / theta_y;
+
+            var new_R = CIRCLE_R + 30;
+            if (sign >= 0)
+            {
+              var new_y = new_R * Math.sin(theta_x) + CIRCLE_CENTER_K;  
+            }
+            else
+            {
+              var new_y = new_R * Math.sin(theta_x+Math.PI) + CIRCLE_CENTER_K + 20*SCALE;
+            }
+
+            return new_y;
+          })
+          .text(function() { return n; })
+          .attr("font-size", function() { return 15*SCALE +"px";})
+          .attr("fill", "black")
+          .attr("class", "text");
+}
+
 async function generateDots(N, dots)
 {
   var K = 2*Math.PI / N;
-  var dot_radius = 2;
+  var dot_radius = 2 * SCALE;
   
   for (var n=0; n < N; n++)
   {
@@ -76,47 +122,36 @@ async function generateDots(N, dots)
                   .attr("r", dot_radius)
                   .style("fill", "black")
                   .attr("class", "dots");
-    var text = MainContainer
-                  .append("text")
-                  .attr("x", function() { 
-                    
-                    var theta_x = Math.acos((x - CIRCLE_CENTER_H)/ CIRCLE_R);
-                    var theta_y = Math.asin((y - CIRCLE_CENTER_K)/ CIRCLE_R);
-                    var sign = theta_x / theta_y;
-                    
-                    var new_R = CIRCLE_R + 30;
-                    if (sign >= 0)
-                    {
-                      var new_x = new_R * Math.cos(theta_x) + CIRCLE_CENTER_H;  
-                    }
-                    else
-                    {
-                      var new_x = new_R * Math.cos(theta_x) + CIRCLE_CENTER_H;
-                    }
-                    
-                    return new_x;
-                  })
-                  .attr("y", function() { 
-                    var theta_x = Math.acos((x - CIRCLE_CENTER_H)/ CIRCLE_R);
-                    var theta_y = Math.asin((y - CIRCLE_CENTER_K)/ CIRCLE_R);
-                    var sign = theta_x / theta_y;
-                    
-                    var new_R = CIRCLE_R + 30;
-                    if (sign >= 0)
-                    {
-                      var new_y = new_R * Math.sin(theta_x) + CIRCLE_CENTER_K + 5;  
-                    }
-                    else
-                    {
-                      var new_y = new_R * Math.sin(theta_x+Math.PI) + CIRCLE_CENTER_K + 5;
-                    }
-                    
-                    return new_y;
-                  })
-                  .text(function() { return n; })
-                  .attr("font-size", "15px")
-                  .attr("fill", "black")
-                  .attr("class", "text");
+    
+    if (!NODE_NUMBERS)
+    {
+      continue;
+    }
+    else if (N < 50)
+    {
+      numberNodes(x, y, n);
+    }
+    else if (N < 500)
+    {
+      if (n % 10 == 0)
+      {
+        numberNodes(x, y, n);
+      }
+    }
+    else if (N < 3000)
+    {
+      if (n % 50 == 0)
+      {
+        numberNodes(x, y, n);
+      }
+    }
+    else
+    {
+      if (n % 100 == 0)
+      {
+        numberNodes(x, y, n);
+      }
+    }
   
   }
 }
@@ -260,9 +295,42 @@ function initializeSettings()
       setup();        
     })
     .attr("id", "screen_scale_button");
+  
+  
+  // Node number checkbox
+  d3.select("#controls_container").append("p")
+                              .html("Node Numbers: <b>ON</b> / off" )
+                              .attr("id", "node_number_on_off_text");
+  
+  node_num_on_off();
+  
 
 }
 
+function node_num_on_off()
+{
+  d3.select("#node_number_on_off_text")
+    .append("form")
+    .append("input").attr("type", "checkbox")
+    
+    .on("click", function() {
+        var checkbox = d3.select("#node_number_checkbox");
+        if (checkbox.property("checked"))
+        {
+          NODE_NUMBERS = true;
+          d3.select("#node_number_on_off_text").html("Node Numbers: <b>ON</b> / off" );
+          node_num_on_off();
+        }
+        else
+        {
+          NODE_NUMBERS = false;
+          d3.select("#node_number_on_off_text").html("Node Numbers: on / <b>OFF</b>" );
+          node_num_on_off();
+        }
+    })
+    .attr("id", "node_number_checkbox");
+  d3.select("#node_number_checkbox").property("checked", NODE_NUMBERS);
+}
 
 function update_container(n)
 {
