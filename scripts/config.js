@@ -95,7 +95,10 @@ function initializeSettings()
     .attr("id", "pause_button");
   
   // Timestep textfield
-  d3.select("#controls_container").append("p").html("Timestep (ms): ").append("input")
+  d3.select("#controls_container").append("p").html("Timestep (ms): ").style("font-size", function(){
+                  return 18*SCALE + "px";
+    })
+    .append("input")
     .attr("type", "number")
     .attr("min", "0")
     .attr("step", "50")
@@ -107,7 +110,10 @@ function initializeSettings()
   
   
   // Times table
-  d3.select("#controls_container").append("p").html("Times Table (integer): ").append("input")
+  d3.select("#controls_container").append("p").html("Times Table (integer): ").style("font-size", function(){
+                  return 18*SCALE + "px";
+    })
+    .append("input")
     .attr("type", "number")
     .attr("min", "2")
     .attr("step", "1")
@@ -119,8 +125,15 @@ function initializeSettings()
     })
     .attr("id", "pause_button");
   
+  
+  
+  
   // Max Nodes table
-  d3.select("#controls_container").append("p").html("Upper Bound on Nodes: ").append("input")
+  d3.select("#controls_container").append("p").html("Upper Bound on Nodes: ").style("font-size", function(){
+                  return 18*SCALE + "px";
+    })
+
+    .append("input")
     .attr("type", "text")
     .attr("value", N_UPPER_BOUND)
     .on("change", function() {
@@ -137,8 +150,15 @@ function initializeSettings()
     })
     .attr("id", "node_upper_bound");
   
+  
+  
+  
   // Screen scale
-  d3.select("#controls_container").append("p").html("App Scale: ").append("input")
+  d3.select("#controls_container").append("p").html("App Scale: ").style("font-size", function()
+                                                                         {
+                  return 18*SCALE + "px";
+    })
+    .append("input")
     .attr("type", "number")
     .attr("min", "0.1")
     .attr("max", "2")
@@ -154,13 +174,97 @@ function initializeSettings()
   
   // Node number checkbox
   d3.select("#controls_container").append("p")
-                              .html("Node Numbers: <b>ON</b> / off" )
+                              .html("Node Numbers: <b>ON</b> / off" ).style("font-size", function(){
+                  return 18*SCALE + "px";})
                               .attr("id", "node_number_on_off_text");
+  nodeNumOnOff();
   
-  node_num_on_off();
+  
+  // Color checkbox
+  d3.select("#controls_container").append("p")
+                              .html("Color Scheme: <b>ON</b> / off / random" ).style("font-size", function(){
+                  return 18*SCALE + "px";})
+                              .attr("id", "color_selectors");
+  colorMode();
 }
 
-function node_num_on_off()
+
+function colorMode()
+{
+  // checkbox 1
+  d3.select("#color_selectors")
+    .append("form").html("Color Evolution ")
+    .append("input").attr("type", "checkbox")
+  
+    
+    .on("click", function() {
+        var checkbox = d3.select("#color_select_checkbox_1");
+        if (checkbox.property("checked"))
+        {
+          d3.select("#color_select_checkbox_2").property("checked", false);
+          RANDOM_COLORS_PER_ITERATION = true;
+          RANDOM_COLORS_PER_LINE = false;
+          d3.select("#color_selectors").html("Color Scheme: <b>ON</b> / off / random" ).style("font-size", function(){
+                  return 18*SCALE + "px";});
+        }
+        else if (d3.select("#color_select_checkbox_2").property("checked"))
+        {
+          RANDOM_COLORS_PER_ITERATION = false;
+          RANDOM_COLORS_PER_LINE = true;
+          d3.select("#color_selectors").html("Color Scheme: on / off / <b>RANDOM</b>" ).style("font-size", function(){
+                  return 18*SCALE + "px";});
+        }
+        else
+        {
+          RANDOM_COLORS_PER_ITERATION = false;
+          RANDOM_COLORS_PER_LINE = false
+          d3.select("#color_selectors").html("Color Scheme: on / <b>OFF</b> / random" ).style("font-size", function(){
+                  return 18*SCALE + "px";});
+        }
+        colorMode();  
+    })
+    .attr("id", "color_select_checkbox_1");
+  
+  // checkbox 2
+  d3.select("#color_selectors")
+    .append("form").html("Random Chord Colors ")
+    .append("input").attr("type", "checkbox")
+    
+    .on("click", function() {
+        var checkbox = d3.select("#color_select_checkbox_2");
+        if (checkbox.property("checked"))
+        {
+          d3.select("#color_select_checkbox_1").property("checked", false);
+          RANDOM_COLORS_PER_ITERATION = false;
+          RANDOM_COLORS_PER_LINE = true;
+          d3.select("#color_selectors").html("Color Scheme: on / off / <b>RANDOM</b>" ).style("font-size", function(){
+                  return 18*SCALE + "px";});
+        }
+        else if (d3.select("#color_select_checkbox_1").property("checked"))
+        {
+          RANDOM_COLORS_PER_ITERATION = true;
+          RANDOM_COLORS_PER_LINE = false;
+          d3.select("#color_selectors").html("Color Scheme: <b>ON</b> / off / random" ).style("font-size", function(){
+                  return 18*SCALE + "px";});
+        }
+        else
+        {
+          RANDOM_COLORS_PER_ITERATION = false;
+          RANDOM_COLORS_PER_LINE = false
+          d3.select("#color_selectors").html("Color Scheme: on / <b>OFF</b> / random" ).style("font-size", function(){
+                  return 18*SCALE + "px";});
+        }
+        colorMode();
+    })
+    .attr("id", "color_select_checkbox_2");
+  
+  d3.select("#color_select_checkbox_1").property("checked", RANDOM_COLORS_PER_ITERATION);
+  d3.select("#color_select_checkbox_2").property("checked", RANDOM_COLORS_PER_LINE);
+}
+
+
+
+function nodeNumOnOff()
 {
   d3.select("#node_number_on_off_text")
     .append("form")
@@ -172,14 +276,13 @@ function node_num_on_off()
         {
           NODE_NUMBERS = true;
           d3.select("#node_number_on_off_text").html("Node Numbers: <b>ON</b> / off" );
-          node_num_on_off();
         }
         else
         {
           NODE_NUMBERS = false;
           d3.select("#node_number_on_off_text").html("Node Numbers: on / <b>OFF</b>" );
-          node_num_on_off();
         }
+        nodeNumOnOff();
     })
     .attr("id", "node_number_checkbox");
   d3.select("#node_number_checkbox").property("checked", NODE_NUMBERS);

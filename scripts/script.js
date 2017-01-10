@@ -12,12 +12,8 @@ async function generateDots(N, dots)
     var coords = [x, y];
     dots.push(coords);
     
-    MainContainer.append("circle")
-                  .attr("cx", x)
-                  .attr("cy", y)
-                  .attr("r", dot_radius)
-                  .style("fill", "black")
-                  .attr("class", "dots");
+    
+    createNodes(x, y, dot_radius / SCALE);
     
     if (!NODE_NUMBERS)
     {
@@ -25,12 +21,14 @@ async function generateDots(N, dots)
     }
     else if (N < 50)
     {
+      createNodes(x, y, dot_radius);
       numberNodes(x, y, n);
     }
     else if (N < 500)
     {
       if (n % 10 == 0)
       {
+        createNodes(x, y, dot_radius);
         numberNodes(x, y, n);
       }
     }
@@ -38,6 +36,7 @@ async function generateDots(N, dots)
     {
       if (n % 50 == 0)
       {
+        createNodes(x, y, dot_radius);
         numberNodes(x, y, n);
       }
     }
@@ -45,6 +44,7 @@ async function generateDots(N, dots)
     {
       if (n % 100 == 0)
       {
+        createNodes(x, y, dot_radius);
         numberNodes(x, y, n);
       }
     }
