@@ -32,6 +32,8 @@ function sleep(ms) {
 
 function initializeImage()
 {
+  d3.select("#WorldContainer").remove();
+  d3.select("#controls_container").remove();
   HEIGHT = 600 * SCALE;
   WIDTH = HEIGHT;
   CIRCLE_CENTER_H = HEIGHT / 2;
@@ -255,7 +257,7 @@ function initializeSettings()
     .on("change", function() {
       SCALE = this.value;  
       reset();
-            
+      setup();        
     })
     .attr("id", "screen_scale_button");
 
@@ -274,7 +276,7 @@ function update_container(n)
                   .attr("x", function() { return WIDTH-175; })
                   .attr("y", function() { return HEIGHT-20; })
                   .text(function() { return "Nodes: " + n; })
-                  .attr("font-size", "30px")
+                  .attr("font-size", function() { return 30*SCALE +"px";})
                   .attr("fill", "black")
                   .attr("class", "text");
   
@@ -283,7 +285,7 @@ function update_container(n)
                   .text(function() { return "Chaotic Times Table: x" + TIMES_TABLE; })
                   .attr("x", function() { return (WIDTH / 2) - this.getComputedTextLength(); })
                   .attr("y", function() { return 35; })
-                  .attr("font-size", "30px")
+                  .attr("font-size", function() { return 30*SCALE +"px";})
                   .attr("fill", "black")
                   .attr("class", "text");
   
@@ -293,7 +295,7 @@ function update_container(n)
                   .attr("x", function() { return 25; })
                   .attr("y", function() { return HEIGHT-20; })
                   .text(function() { return "Timestep: " + SLEEP_CONSTANT + "ms"; })
-                  .attr("font-size", "15px")
+                  .attr("font-size", function() { return 15*SCALE +"px";})
                   .attr("fill", "black")
                   .attr("class", "text");
 }
