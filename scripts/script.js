@@ -1,8 +1,5 @@
 
 
-
-
-
 async function generateDots(N, dots)
 {
   var K = 2*Math.PI / N;
@@ -51,7 +48,6 @@ async function generateDots(N, dots)
         numberNodes(x, y, n);
       }
     }
-  
   }
 }
 
@@ -80,7 +76,6 @@ function generateCords(n, dots)
     {
       mutateLineColor();  
     }
-    
   }
   if (RANDOM_COLORS_PER_ITERATION)
   {
