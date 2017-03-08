@@ -19,7 +19,6 @@ function mutateLineColor()
       line_color[color] = 0;
     }
   }
-  
 }
 
 function createNodes(x, y, dot_radius)

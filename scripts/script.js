@@ -53,7 +53,7 @@ async function generateDots(N, dots)
 
 
 
-function generateCords(n, dots)
+function generateChords(n, dots)
 {
   for (var index_d_1=0; index_d_1 < dots.length; index_d_1++)
   {
@@ -61,12 +61,17 @@ function generateCords(n, dots)
     var index_d_2 = (index_d_1 * TIMES_TABLE) % n; 
     var dot_2_coords = dots[index_d_2];
     
+    if (dot_1_coords == dot_2_coords)
+    {
+      continue;
+    }
+    
     SVGContainer.append("line")
                 .attr("x1", function() { return dot_1_coords[0]; })
                 .attr("y1", function() { return dot_1_coords[1]; })
                 .attr("x2", function() { return dot_2_coords[0]; })
                 .attr("y2", function() { return dot_2_coords[1]; })
-                .attr("stroke", line_color) 
+                .attr("stroke", line_color)
                 .attr("stroke-width", "2")
                 .attr("class", "line");
     
@@ -156,7 +161,7 @@ async function start()
     
     dots = []
     generateDots(n, dots);
-    generateCords(n, dots);   
+    generateChords(n, dots);   
     
     if (STOP)
     {

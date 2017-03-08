@@ -72,8 +72,6 @@ function initializeImage()
 
 function updateText(id, value)
 {
-  console.log("ID: " + id);
-  console.log("New sleep constant: " + SLEEP_CONSTANT);
   d3.select(id).select("p")
       .html(function ()
       {
