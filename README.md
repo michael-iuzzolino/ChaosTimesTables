@@ -6,4 +6,4 @@ In short, you pick a times table you want to visualize, and the visualization it
 
 Notice that if you pick the 2 times table, then the Cardioid geometry emerges as it does in the case of Z = Z^2 + C in the Mandelbrot set. Similarly, the 3 times table results in a 3-leaf clover, akin to the Mandelbrot set of Z = Z^3 + C. After playing with these, set the times table to a large number and revel in the beautiful cascade of complex geometries that arise.
 
-<img src="resources/collatz.gif" width=500></img>
+<img src="resources/chaos.gif" width=500></img>
